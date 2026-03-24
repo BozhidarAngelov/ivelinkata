@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HRM Portal — Employee Directory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- CORPORATE HEADER -->
+  <header class="corp-header">
+    <div class="corp-header-inner">
+      <div class="corp-logo">
+        <div class="logo-icon"><i class="fa fa-building-columns"></i></div>
+        <div class="logo-text">
+          <span class="logo-main">HRM Portal</span>
+          <span class="logo-tagline">Human Resources Management System</span>
+        </div>
+      </div>
+      <div class="corp-meta">
+        <span><i class="fa fa-circle-user"></i> Admin</span>
+        <span class="meta-sep">|</span>
+        <span><i class="fa fa-calendar"></i> <span id="corpDate"></span></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb-bar">
+    <span>Home</span>
+    <i class="fa fa-chevron-right"></i>
+    <span>Employees</span>
+    <i class="fa fa-chevron-right"></i>
+    <span class="bc-active">Directory</span>
+  </div>
+
+  <main class="corp-main">
+
+    <!-- PAGE TITLE ROW -->
+    <div class="page-title-row">
+      <div>
+        <h1 class="page-title">Employee Directory</h1>
+        <p class="page-sub">Search, filter and manage all employee records.</p>
+      </div>
+      <div class="title-actions">
+        <button class="corp-btn outline" id="btnExcel"><i class="fa fa-file-excel"></i> Export to Excel</button>
+        <button class="corp-btn primary" id="btnAdd"><i class="fa fa-user-plus"></i> Add Employee</button>
+      </div>
+    </div>
+
+    <!-- FILTER CARD -->
+    <div class="filter-card">
+      <div class="filter-card-header">
+        <span><i class="fa fa-filter"></i> Search Filters</span>
+        <button class="clear-link" id="btnClear"><i class="fa fa-rotate-left"></i> Reset</button>
+      </div>
+      <div class="filter-body">
+        <div class="filter-row-top">
+          <div class="corp-field">
+            <label>Employee Name</label>
+            <div class="field-wrap"><i class="fa fa-user"></i><input type="text" id="fName" placeholder="Search by name..."/></div>
+          </div>
+          <div class="corp-field">
+            <label>Job Title</label>
+            <div class="field-wrap"><i class="fa fa-briefcase"></i><input type="text" id="fJob" placeholder="Search by title..."/></div>
+          </div>
+          <div class="corp-field">
+            <label>Department</label>
+            <div class="field-wrap"><i class="fa fa-sitemap"></i>
+              <select id="fDept">
+                <option value="">All Departments</option>
+              </select>
+            </div>
+          </div>
+          <div class="corp-field">
+            <label>Address</label>
+            <div class="field-wrap"><i class="fa fa-map-pin"></i><input type="text" id="fAddress" placeholder="Search by address..."/></div>
+          </div>
+          <div class="corp-field">
+            <label>Town</label>
+            <div class="field-wrap"><i class="fa fa-location-dot"></i>
+              <select id="fTown">
+                <option value="">All Towns</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="filter-row-bottom">
+          <div class="salary-field">
+            <label>Max Salary: <strong id="salLabel">No Limit</strong></label>
+            <input type="range" id="fSalary" min="0" max="100000" step="1000" value="100000" class="salary-range"/>
+            <div class="salary-ticks">
+              <span>$0</span><span>$25k</span><span>$50k</span><span>$75k</span><span>$100k+</span>
+            </div>
+          </div>
+          <button class="corp-btn primary search-btn" id="btnSearch"><i class="fa fa-magnifying-glass"></i> Search</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS CARD -->
+    <div class="results-card">
+      <div class="results-header">
+        <div class="results-info">
+          <span class="results-count" id="recordCount">0 records found</span>
+        </div>
+      </div>
+
+      <div class="table-scroll">
+        <table id="mainTable">
+          <thead>
+            <tr>
+              <th class="col-num">N°</th>
+              <th class="sortable" data-col="name">Full Name <i class="fa fa-sort"></i></th>
+              <th>Job Title</th>
+              <th>Department</th>
+              <th>Salary</th>
+              <th class="sortable" data-col="address">Address <i class="fa fa-sort"></i></th>
+              <th>Town</th>
+              <th class="col-action">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="table-footer">
+        <div id="pagination" class="pagination"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="corp-footer">
+    <span>HRM Portal &copy; 2024 &mdash; Internal Use Only</span>
+  </footer>
+
+  <!-- ADD MODAL -->
+  <div id="addModal" class="modal-overlay" style="display:none">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3><i class="fa fa-user-plus"></i> Add New Employee</h3>
+        <button class="modal-x" data-close="addModal"><i class="fa fa-xmark"></i></button>
+      </div>
+      <form id="addForm" class="modal-body">
+        <div class="form-grid">
+          <div class="form-field">
+            <label>First Name <span class="req">*</span></label>
+            <input name="first_name" required/>
+          </div>
+          <div class="form-field">
+            <label>Last Name <span class="req">*</span></label>
+            <input name="last_name" required/>
+          </div>
+          <div class="form-field">
+            <label>Job Title <span class="req">*</span></label>
+            <input name="job_title" required/>
+          </div>
+          <div class="form-field">
+            <label>Salary <span class="req">*</span></label>
+            <input name="salary" type="number" step="0.01" required/>
+          </div>
+          <div class="form-field">
+            <label>Department</label>
+            <select name="department_id" id="addDept">
+              <option value="">— Select —</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Phone</label>
+            <input name="phone"/>
+          </div>
+          <div class="form-field">
+            <label>Street Address <span class="req">*</span></label>
+            <input name="street" required/>
+          </div>
+          <div class="form-field">
+            <label>Town</label>
+            <select name="town_id" id="addTown">
+              <option value="">— Select —</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="corp-btn outline" data-close="addModal">Cancel</button>
+          <button type="submit" class="corp-btn primary">Save Employee</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- EDIT MODAL -->
+  <div id="editModal" class="modal-overlay" style="display:none">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3><i class="fa fa-pen-to-square"></i> Edit Employee</h3>
+        <button class="modal-x" data-close="editModal"><i class="fa fa-xmark"></i></button>
+      </div>
+      <form id="editForm" class="modal-body">
+        <input type="hidden" name="employee_id" id="editId"/>
+        <input type="hidden" name="address_id" id="editAddressId"/>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>First Name <span class="req">*</span></label>
+            <input name="first_name" id="editFirstName" required/>
+          </div>
+          <div class="form-field">
+            <label>Last Name <span class="req">*</span></label>
+            <input name="last_name" id="editLastName" required/>
+          </div>
+          <div class="form-field">
+            <label>Job Title <span class="req">*</span></label>
+            <input name="job_title" id="editJobTitle" required/>
+          </div>
+          <div class="form-field">
+            <label>Salary <span class="req">*</span></label>
+            <input name="salary" id="editSalary" type="number" step="0.01" required/>
+          </div>
+          <div class="form-field">
+            <label>Department</label>
+            <select name="department_id" id="editDept"></select>
+          </div>
+          <div class="form-field">
+            <label>Phone</label>
+            <input name="phone" id="editPhone"/>
+          </div>
+          <div class="form-field">
+            <label>Street Address <span class="req">*</span></label>
+            <input name="street" id="editStreet" required/>
+          </div>
+          <div class="form-field">
+            <label>Town</label>
+            <select name="town_id" id="editTown"></select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="corp-btn outline" data-close="editModal">Cancel</button>
+          <button type="submit" class="corp-btn primary">Update Employee</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- DELETE MODAL -->
+  <div id="deleteModal" class="modal-overlay" style="display:none">
+    <div class="modal-box modal-sm">
+      <div class="modal-header">
+        <h3><i class="fa fa-triangle-exclamation"></i> Confirm Deletion</h3>
+        <button class="modal-x" data-close="deleteModal"><i class="fa fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="del-warning">
+          <i class="fa fa-circle-exclamation"></i>
+          <p>Are you sure you want to delete this employee? This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="corp-btn outline" data-close="deleteModal">Cancel</button>
+          <button id="btnConfirmDelete" class="corp-btn danger">Delete Employee</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('corpDate').textContent = new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'});
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

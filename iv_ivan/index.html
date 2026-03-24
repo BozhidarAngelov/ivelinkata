@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NEXUS // Employee Grid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- TOP NAV -->
+  <nav class="topnav">
+    <div class="nav-brand">
+      <span class="nav-bracket">[</span>NEXUS<span class="nav-bracket">]</span>
+      <span class="nav-sub">// PERSONNEL_GRID v2.4</span>
+    </div>
+    <div class="nav-status">
+      <span class="status-dot"></span>
+      <span id="statusText">SYSTEM ONLINE</span>
+    </div>
+  </nav>
+
+  <!-- SCAN LINE OVERLAY -->
+  <div class="scanline"></div>
+
+  <div class="app-wrapper">
+
+    <!-- FILTER PANEL -->
+    <section class="filter-panel">
+      <div class="panel-header">
+        <i class="fa fa-sliders"></i> FILTER_PARAMS
+      </div>
+
+      <div class="filter-grid">
+        <div class="f-group">
+          <label class="f-label">// NAME</label>
+          <input type="text" id="fName" class="f-input" placeholder="SEARCH_NAME..."/>
+        </div>
+
+        <div class="f-group">
+          <label class="f-label">// JOB_TITLE</label>
+          <input type="text" id="fJob" class="f-input" placeholder="SEARCH_JOB..."/>
+        </div>
+
+        <div class="f-group">
+          <label class="f-label">// DEPARTMENT</label>
+          <select id="fDept" class="f-input">
+            <option value="">-- ALL --</option>
+          </select>
+        </div>
+
+        <div class="f-group">
+          <label class="f-label">// MAX_SALARY &nbsp;<span id="salLabel" class="sal-val">NO_LIMIT</span></label>
+          <input type="range" id="fSalary" min="0" max="100000" step="1000" value="100000" class="f-range"/>
+        </div>
+
+        <div class="f-group">
+          <label class="f-label">// ADDRESS</label>
+          <input type="text" id="fAddress" class="f-input" placeholder="SEARCH_ADDR..."/>
+        </div>
+
+        <div class="f-group">
+          <label class="f-label">// TOWN</label>
+          <select id="fTown" class="f-input">
+            <option value="">-- ALL --</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="cmd-row">
+        <button class="cmd-btn primary" id="btnSearch"><i class="fa fa-magnifying-glass"></i> EXECUTE</button>
+        <button class="cmd-btn ghost" id="btnClear"><i class="fa fa-xmark"></i> CLEAR</button>
+        <button class="cmd-btn accent" id="btnAdd"><i class="fa fa-plus"></i> INSERT</button>
+        <button class="cmd-btn excel" id="btnExcel"><i class="fa fa-file-excel"></i> EXPORT</button>
+      </div>
+    </section>
+
+    <!-- DATA GRID -->
+    <section class="data-section">
+      <div class="data-header">
+        <span class="data-title"><i class="fa fa-database"></i> EMPLOYEE_RECORDS</span>
+        <span id="recordCount" class="record-count">[ 0 RECORDS ]</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table id="mainTable">
+          <thead>
+            <tr>
+              <th>N°</th>
+              <th class="sortable" data-col="name">FULL_NAME <i class="fa fa-sort"></i></th>
+              <th>JOB_TITLE</th>
+              <th>DEPT</th>
+              <th>SALARY</th>
+              <th class="sortable" data-col="address">ADDRESS <i class="fa fa-sort"></i></th>
+              <th>TOWN</th>
+              <th>OPS</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+
+      <div id="pagination" class="pagination"></div>
+    </section>
+  </div>
+
+  <!-- ADD MODAL -->
+  <div id="addModal" class="modal-overlay" style="display:none">
+    <div class="modal-box">
+      <div class="modal-head">
+        <span><i class="fa fa-plus"></i> INSERT RECORD</span>
+        <button class="modal-close" data-close="addModal"><i class="fa fa-xmark"></i></button>
+      </div>
+      <form id="addForm" class="modal-form">
+        <div class="form-grid">
+          <div class="fg"><label>FIRST_NAME</label><input name="first_name" required/></div>
+          <div class="fg"><label>LAST_NAME</label><input name="last_name" required/></div>
+          <div class="fg"><label>JOB_TITLE</label><input name="job_title" required/></div>
+          <div class="fg"><label>SALARY</label><input name="salary" type="number" step="0.01" required/></div>
+          <div class="fg"><label>DEPARTMENT</label>
+            <select name="department_id" id="addDept">
+              <option value="">-- SELECT --</option>
+            </select>
+          </div>
+          <div class="fg"><label>PHONE</label><input name="phone"/></div>
+          <div class="fg"><label>STREET</label><input name="street" required/></div>
+          <div class="fg"><label>TOWN</label>
+            <select name="town_id" id="addTown">
+              <option value="">-- SELECT --</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="cmd-btn primary">COMMIT</button>
+          <button type="button" class="cmd-btn ghost" data-close="addModal">ABORT</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- EDIT MODAL -->
+  <div id="editModal" class="modal-overlay" style="display:none">
+    <div class="modal-box">
+      <div class="modal-head">
+        <span><i class="fa fa-pen"></i> MODIFY RECORD</span>
+        <button class="modal-close" data-close="editModal"><i class="fa fa-xmark"></i></button>
+      </div>
+      <form id="editForm" class="modal-form">
+        <input type="hidden" name="employee_id" id="editId"/>
+        <input type="hidden" name="address_id" id="editAddressId"/>
+        <div class="form-grid">
+          <div class="fg"><label>FIRST_NAME</label><input name="first_name" id="editFirstName" required/></div>
+          <div class="fg"><label>LAST_NAME</label><input name="last_name" id="editLastName" required/></div>
+          <div class="fg"><label>JOB_TITLE</label><input name="job_title" id="editJobTitle" required/></div>
+          <div class="fg"><label>SALARY</label><input name="salary" id="editSalary" type="number" step="0.01" required/></div>
+          <div class="fg"><label>DEPARTMENT</label>
+            <select name="department_id" id="editDept"></select>
+          </div>
+          <div class="fg"><label>PHONE</label><input name="phone" id="editPhone"/></div>
+          <div class="fg"><label>STREET</label><input name="street" id="editStreet" required/></div>
+          <div class="fg"><label>TOWN</label>
+            <select name="town_id" id="editTown"></select>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="cmd-btn primary">UPDATE</button>
+          <button type="button" class="cmd-btn ghost" data-close="editModal">ABORT</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- DELETE MODAL -->
+  <div id="deleteModal" class="modal-overlay" style="display:none">
+    <div class="modal-box modal-sm">
+      <div class="modal-head">
+        <span><i class="fa fa-triangle-exclamation"></i> CONFIRM_DELETE</span>
+        <button class="modal-close" data-close="deleteModal"><i class="fa fa-xmark"></i></button>
+      </div>
+      <p class="del-msg">This action cannot be undone. Proceed?</p>
+      <div class="modal-actions">
+        <button id="btnConfirmDelete" class="cmd-btn danger">PURGE</button>
+        <button class="cmd-btn ghost" data-close="deleteModal">ABORT</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
