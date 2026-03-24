@@ -11,7 +11,6 @@
 </head>
 <body>
 
-  <!-- CORPORATE HEADER -->
   <header class="corp-header">
     <div class="corp-header-inner">
       <div class="corp-logo">
@@ -29,7 +28,6 @@
     </div>
   </header>
 
-  <!-- BREADCRUMB -->
   <div class="breadcrumb-bar">
     <span>Home</span>
     <i class="fa fa-chevron-right"></i>
@@ -40,7 +38,6 @@
 
   <main class="corp-main">
 
-    <!-- PAGE TITLE ROW -->
     <div class="page-title-row">
       <div>
         <h1 class="page-title">Employee Directory</h1>
@@ -62,28 +59,28 @@
         <div class="filter-row-top">
           <div class="corp-field">
             <label>Employee Name</label>
-            <div class="field-wrap"><i class="fa fa-user"></i><input type="text" id="fName" placeholder="Search by name..."/></div>
+            <div class="field-wrap"><i class="fa fa-user"></i><input type="text" id="filterName" placeholder="Search by name..."/></div>
           </div>
           <div class="corp-field">
             <label>Job Title</label>
-            <div class="field-wrap"><i class="fa fa-briefcase"></i><input type="text" id="fJob" placeholder="Search by title..."/></div>
+            <div class="field-wrap"><i class="fa fa-briefcase"></i><input type="text" id="filterJob" placeholder="Search by title..."/></div>
           </div>
           <div class="corp-field">
             <label>Department</label>
             <div class="field-wrap"><i class="fa fa-sitemap"></i>
-              <select id="fDept">
+              <select id="filterDept">
                 <option value="">All Departments</option>
               </select>
             </div>
           </div>
           <div class="corp-field">
             <label>Address</label>
-            <div class="field-wrap"><i class="fa fa-map-pin"></i><input type="text" id="fAddress" placeholder="Search by address..."/></div>
+            <div class="field-wrap"><i class="fa fa-map-pin"></i><input type="text" id="filterAddress" placeholder="Search by address..."/></div>
           </div>
           <div class="corp-field">
             <label>Town</label>
             <div class="field-wrap"><i class="fa fa-location-dot"></i>
-              <select id="fTown">
+              <select id="filterTown">
                 <option value="">All Towns</option>
               </select>
             </div>
@@ -91,8 +88,8 @@
         </div>
         <div class="filter-row-bottom">
           <div class="salary-field">
-            <label>Max Salary: <strong id="salLabel">No Limit</strong></label>
-            <input type="range" id="fSalary" min="0" max="100000" step="1000" value="100000" class="salary-range"/>
+            <label>Max Salary: <strong id="salaryLabel">No Limit</strong></label>
+            <input type="range" id="filterSalary" min="0" max="100000" step="1000" value="100000" class="salary-range"/>
             <div class="salary-ticks">
               <span>$0</span><span>$25k</span><span>$50k</span><span>$75k</span><span>$100k+</span>
             </div>
@@ -105,9 +102,7 @@
     <!-- RESULTS CARD -->
     <div class="results-card">
       <div class="results-header">
-        <div class="results-info">
-          <span class="results-count" id="recordCount">0 records found</span>
-        </div>
+        <span class="results-count"><span id="resultsCount">0</span> records found</span>
       </div>
 
       <div class="table-scroll">
@@ -115,11 +110,11 @@
           <thead>
             <tr>
               <th class="col-num">N°</th>
-              <th class="sortable" data-col="name">Full Name <i class="fa fa-sort"></i></th>
+              <th class="sortable" data-col="name">Full Name <span class="sort-icon"><i class="fa fa-sort"></i></span></th>
               <th>Job Title</th>
               <th>Department</th>
               <th>Salary</th>
-              <th class="sortable" data-col="address">Address <i class="fa fa-sort"></i></th>
+              <th class="sortable" data-col="address">Address <span class="sort-icon"><i class="fa fa-sort"></i></span></th>
               <th>Town</th>
               <th class="col-action">Actions</th>
             </tr>
@@ -134,19 +129,20 @@
     </div>
   </main>
 
-  <!-- FOOTER -->
   <footer class="corp-footer">
     <span>HRM Portal &copy; 2024 &mdash; Internal Use Only</span>
   </footer>
 
   <!-- ADD MODAL -->
-  <div id="addModal" class="modal-overlay" style="display:none">
+  <div id="addModal" class="modal-overlay">
     <div class="modal-box">
       <div class="modal-header">
         <h3><i class="fa fa-user-plus"></i> Add New Employee</h3>
-        <button class="modal-x" data-close="addModal"><i class="fa fa-xmark"></i></button>
+        <button class="modal-x" data-modal="addModal"><i class="fa fa-xmark"></i></button>
       </div>
       <form id="addForm" class="modal-body">
+        <p id="addError" class="error-msg"></p>
+        <input type="hidden" name="middle_name" value=""/>
         <div class="form-grid">
           <div class="form-field">
             <label>First Name <span class="req">*</span></label>
@@ -166,7 +162,7 @@
           </div>
           <div class="form-field">
             <label>Department</label>
-            <select name="department_id" id="addDept">
+            <select name="department_id" id="addDeptSelect">
               <option value="">— Select —</option>
             </select>
           </div>
@@ -176,17 +172,17 @@
           </div>
           <div class="form-field">
             <label>Street Address <span class="req">*</span></label>
-            <input name="street" required/>
+            <input name="address_text" required/>
           </div>
           <div class="form-field">
             <label>Town</label>
-            <select name="town_id" id="addTown">
+            <select name="town_id" id="addTownSelect">
               <option value="">— Select —</option>
             </select>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="corp-btn outline" data-close="addModal">Cancel</button>
+          <button type="button" class="corp-btn outline" data-modal="addModal">Cancel</button>
           <button type="submit" class="corp-btn primary">Save Employee</button>
         </div>
       </form>
@@ -194,51 +190,53 @@
   </div>
 
   <!-- EDIT MODAL -->
-  <div id="editModal" class="modal-overlay" style="display:none">
+  <div id="editModal" class="modal-overlay">
     <div class="modal-box">
       <div class="modal-header">
         <h3><i class="fa fa-pen-to-square"></i> Edit Employee</h3>
-        <button class="modal-x" data-close="editModal"><i class="fa fa-xmark"></i></button>
+        <button class="modal-x" data-modal="editModal"><i class="fa fa-xmark"></i></button>
       </div>
       <form id="editForm" class="modal-body">
-        <input type="hidden" name="employee_id" id="editId"/>
-        <input type="hidden" name="address_id" id="editAddressId"/>
+        <p id="editError" class="error-msg"></p>
+        <input type="hidden" name="employee_id"/>
+        <input type="hidden" name="address_id"/>
+        <input type="hidden" name="middle_name" value=""/>
         <div class="form-grid">
           <div class="form-field">
             <label>First Name <span class="req">*</span></label>
-            <input name="first_name" id="editFirstName" required/>
+            <input name="first_name" required/>
           </div>
           <div class="form-field">
             <label>Last Name <span class="req">*</span></label>
-            <input name="last_name" id="editLastName" required/>
+            <input name="last_name" required/>
           </div>
           <div class="form-field">
             <label>Job Title <span class="req">*</span></label>
-            <input name="job_title" id="editJobTitle" required/>
+            <input name="job_title" required/>
           </div>
           <div class="form-field">
             <label>Salary <span class="req">*</span></label>
-            <input name="salary" id="editSalary" type="number" step="0.01" required/>
+            <input name="salary" type="number" step="0.01" required/>
           </div>
           <div class="form-field">
             <label>Department</label>
-            <select name="department_id" id="editDept"></select>
+            <select name="department_id" id="editDeptSelect"></select>
           </div>
           <div class="form-field">
             <label>Phone</label>
-            <input name="phone" id="editPhone"/>
+            <input name="phone"/>
           </div>
           <div class="form-field">
             <label>Street Address <span class="req">*</span></label>
-            <input name="street" id="editStreet" required/>
+            <input name="address_text" required/>
           </div>
           <div class="form-field">
             <label>Town</label>
-            <select name="town_id" id="editTown"></select>
+            <select name="town_id" id="editTownSelect"></select>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="corp-btn outline" data-close="editModal">Cancel</button>
+          <button type="button" class="corp-btn outline" data-modal="editModal">Cancel</button>
           <button type="submit" class="corp-btn primary">Update Employee</button>
         </div>
       </form>
@@ -246,24 +244,26 @@
   </div>
 
   <!-- DELETE MODAL -->
-  <div id="deleteModal" class="modal-overlay" style="display:none">
+  <div id="deleteModal" class="modal-overlay">
     <div class="modal-box modal-sm">
       <div class="modal-header">
         <h3><i class="fa fa-triangle-exclamation"></i> Confirm Deletion</h3>
-        <button class="modal-x" data-close="deleteModal"><i class="fa fa-xmark"></i></button>
+        <button class="modal-x" data-modal="deleteModal"><i class="fa fa-xmark"></i></button>
       </div>
       <div class="modal-body">
         <div class="del-warning">
           <i class="fa fa-circle-exclamation"></i>
-          <p>Are you sure you want to delete this employee? This action cannot be undone.</p>
+          <p>Delete <strong id="deleteEmpName"></strong>? This cannot be undone.</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="corp-btn outline" data-close="deleteModal">Cancel</button>
+          <button type="button" class="corp-btn outline" data-modal="deleteModal">Cancel</button>
           <button id="btnConfirmDelete" class="corp-btn danger">Delete Employee</button>
         </div>
       </div>
     </div>
   </div>
+
+  <div id="toast" class="toast"></div>
 
   <script>
     document.getElementById('corpDate').textContent = new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'});
