@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls *.zip)",
+      "Bash(cat \"/c/Users/game_/Downloads/company \\(1\\).sql\")",
+      "Bash(unzip -l \"Company \\(2\\).zip\")",
+      "Bash(grep -A 20 \"CREATE TABLE IF NOT EXISTS \\\\`employees\\\\`\")",
+      "Bash(grep -A 5 \"INSERT INTO \\\\`departments\\\\`\")",
+      "Bash(grep -A 20 \"INSERT INTO \\\\`departments\\\\`\")",
+      "Bash(grep -A 40 \"INSERT INTO \\\\`towns\\\\`\")",
+      "Bash(unzip -l \"API-Data-Dashboard---Own-API-main \\(2\\).zip\")",
+      "Bash(unzip -p \"API-Data-Dashboard---Own-API-main \\(2\\).zip\" \"API-Data-Dashboard---Own-API-main/script.js\")",
+      "Bash(unzip -p \"API-Data-Dashboard---Own-API-main \\(2\\).zip\" \"API-Data-Dashboard---Own-API-main/index.html\")",
+      "Bash(unzip -p \"API-Data-Dashboard---Own-API-main \\(2\\).zip\" \"API-Data-Dashboard---Own-API-main/style.css\")",
+      "Bash(/c/xampp/mysql/bin/mysql.exe -u root -e \"SHOW DATABASES;\")",
+      "Bash(/c/xampp/mysql/bin/mysql.exe -u root -e \"USE company; SHOW TABLES; SELECT COUNT\\(*\\) as employees FROM employees;\")",
+      "Bash(curl -s \"http://localhost/iv_anton/API/employees.php\")",
+      "Bash(/c/xampp/mysql/bin/mysql.exe -u root -e \"SELECT 1;\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://localhost/iv_anton/\")",
+      "Bash(/c/xampp/mysql/bin/mysql.exe -u root -e \"SELECT employee_id, first_name, last_name, salary FROM company.employees WHERE last_name=''Petrov'';\")"
+    ]
+  }
+}
